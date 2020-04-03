@@ -138,9 +138,9 @@ public class StatisticsFragment extends Fragment {
 
         int i = 0;
         for (Cases_time_series casesTimeSeries : casesTimeSeriesList) {
-            valuesTotal.add(new BarEntry(i++, Float.parseFloat(casesTimeSeries.getTotalconfirmed())));
-            valuesRecovered.add(new BarEntry(i++, Float.parseFloat(casesTimeSeries.getTotalrecovered())));
-            valuesDeaths.add(new BarEntry(i++, Float.parseFloat(casesTimeSeries.getTotaldeceased())));
+            valuesTotal.add(new BarEntry(i++, Float.parseFloat(casesTimeSeries.getDailyconfirmed())));
+            valuesRecovered.add(new BarEntry(i++, Float.parseFloat(casesTimeSeries.getDailyrecovered())));
+            valuesDeaths.add(new BarEntry(i++, Float.parseFloat(casesTimeSeries.getDailydeceased())));
         }
 
         final BarDataSet set1 = new BarDataSet(valuesTotal, "New Cases");
