@@ -26,8 +26,6 @@ import lombok.Data;
 public class CaseReport {
     private List<Cases_time_series> cases_time_series;
 
-    private List<Key_values> key_values;
-
     private List<Statewise> statewise;
 
     private List<Tested> tested;

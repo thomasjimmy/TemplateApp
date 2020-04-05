@@ -27,13 +27,18 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.aurora.corona.Constants;
 import com.aurora.corona.model.casetime.CaseReport;
+import com.aurora.corona.model.casetime.Cases_time_series;
+import com.aurora.corona.model.casetime.Statewise;
 import com.aurora.corona.task.NetworkTask;
-import com.aurora.corona.util.Log;
 import com.aurora.corona.util.PrefUtil;
 import com.google.gson.Gson;
 
+import java.util.Collections;
+import java.util.List;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class CaseReportModel extends AndroidViewModel {
@@ -41,6 +46,7 @@ public class CaseReportModel extends AndroidViewModel {
     private Gson gson = new Gson();
     private MutableLiveData<Boolean> data = new MutableLiveData<>();
     private MutableLiveData<String> error = new MutableLiveData<>();
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     public CaseReportModel(@NonNull Application application) {
         super(application);
@@ -56,26 +62,23 @@ public class CaseReportModel extends AndroidViewModel {
     }
 
     public void fetchOnlineData() {
-        Observable.fromCallable(() -> new NetworkTask()
+        disposable.add(Observable.fromCallable(() -> new NetworkTask()
                 .get("https://api.covid19india.org/data.json"))
                 .subscribeOn(Schedulers.io())
                 .map(rawJSON -> gson.fromJson(rawJSON, CaseReport.class))
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(this::saveDataToPreferences)
-                .doOnError(throwable -> {
-                    error.setValue(throwable.getMessage());
-                    Log.e(throwable.getMessage());
-                })
-                .subscribe();
+                .subscribe(this::saveDataToPreferences));
     }
 
     private void saveDataToPreferences(CaseReport caseReport) {
         try {
             PrefUtil.putString(getApplication(), Constants.PREFERENCE_CASE_TIME_SERIES, gson.toJson(caseReport.getCases_time_series()));
-            PrefUtil.putString(getApplication(), Constants.PREFERENCE_KEY_VALUES, gson.toJson(caseReport.getKey_values().get(0)));
             PrefUtil.putString(getApplication(), Constants.PREFERENCE_STATE_WISE, gson.toJson(caseReport.getStatewise()));
             PrefUtil.putString(getApplication(), Constants.PREFERENCE_OVERALL_DATA, gson.toJson(caseReport.getStatewise().get(0)));
             PrefUtil.putString(getApplication(), Constants.PREFERENCE_TESTED, gson.toJson(caseReport.getTested()));
+            List<Cases_time_series> casesTimeSeries = caseReport.getCases_time_series();
+            Collections.reverse(casesTimeSeries);
+            PrefUtil.putString(getApplication(), Constants.PREFERENCE_KEY_VALUES, gson.toJson(casesTimeSeries.get(0)));
             data.setValue(true);
         } catch (Exception e) {
             data.setValue(false);

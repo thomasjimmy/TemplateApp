@@ -25,7 +25,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.aurora.corona.R;
-import com.aurora.corona.model.casetime.Delta;
 import com.aurora.corona.model.casetime.Statewise;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.items.AbstractItem;
@@ -87,10 +86,9 @@ public class StateItem extends AbstractItem<StateItem.ViewHolder> {
         public void bindView(@NotNull StateItem item, @NotNull List<?> list) {
 
             final Statewise statewise = item.getStatewise();
-            final Delta delta = statewise.getDelta();
 
             line1.setText(statewise.getState());
-            line2.setText(StringUtils.joinWith(" \u2022 ", "Today : Reported " + delta.getConfirmed(), "Active " + delta.getActive(), "Recovered " + delta.getRecovered(), "Deaths " + delta.getDeaths()));
+            line2.setText(StringUtils.joinWith(" \u2022 ", "Today : Reported " + statewise.getConfirmed(), "Active " + statewise.getActive(), "Recovered " + statewise.getRecovered(), "Deaths " + statewise.getDeaths()));
             line3.setText(StringUtils.joinWith(" : ", "Last updated", statewise.getLastupdatedtime()));
         }
 

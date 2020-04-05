@@ -22,17 +22,23 @@ import lombok.Data;
 
 @Data
 public class Statewise {
+    private String recovered;
+
+    private String deltadeaths;
+
+    private String deltarecovered;
+
     private String active;
+
+    private String deltaconfirmed;
+
+    private String state;
+
+    private String statecode;
 
     private String confirmed;
 
     private String deaths;
 
-    private Delta delta;
-
     private String lastupdatedtime;
-
-    private String recovered;
-
-    private String state;
 }
