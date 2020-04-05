@@ -27,14 +27,10 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.aurora.corona.Constants;
 import com.aurora.corona.model.casetime.CaseReport;
-import com.aurora.corona.model.casetime.Cases_time_series;
-import com.aurora.corona.model.casetime.Statewise;
 import com.aurora.corona.task.NetworkTask;
+import com.aurora.corona.util.Log;
 import com.aurora.corona.util.PrefUtil;
 import com.google.gson.Gson;
-
-import java.util.Collections;
-import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -67,7 +63,7 @@ public class CaseReportModel extends AndroidViewModel {
                 .subscribeOn(Schedulers.io())
                 .map(rawJSON -> gson.fromJson(rawJSON, CaseReport.class))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::saveDataToPreferences));
+                .subscribe(this::saveDataToPreferences, throwable -> Log.e(throwable.getMessage())));
     }
 
     private void saveDataToPreferences(CaseReport caseReport) {
