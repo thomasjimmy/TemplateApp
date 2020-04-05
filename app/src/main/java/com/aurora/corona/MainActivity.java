@@ -32,6 +32,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.aurora.corona.viewmodel.CaseReportModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     CoordinatorLayout container;
     @BindView(R.id.nav_view)
     BottomNavigationView bottomNavigationView;
+    @BindView(R.id.swipe_layout)
+    SwipeRefreshLayout swipeLayout;
 
     static boolean matchDestination(@NonNull NavDestination destination, @IdRes int destId) {
         NavDestination currentDestination = destination;
@@ -88,11 +91,21 @@ public class MainActivity extends AppCompatActivity {
         caseReportModel.getData().observe(this, result -> {
             if (result)
                 showSnackBar("Database updated", null);
+            swipeLayout.setRefreshing(false);
         });
 
         caseReportModel.getError().observe(this, s -> {
             showSnackBar("Failed to retrieve new data", v -> caseReportModel.fetchOnlineData());
+            swipeLayout.setRefreshing(false);
         });
+
+        swipeLayout.setOnRefreshListener(caseReportModel::fetchOnlineData);
+    }
+
+    @Override
+    protected void onPause() {
+        swipeLayout.setRefreshing(false);
+        super.onPause();
     }
 
     protected void showSnackBar(String message, View.OnClickListener clickListener) {
