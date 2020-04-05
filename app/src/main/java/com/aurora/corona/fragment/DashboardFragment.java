@@ -33,8 +33,6 @@ import androidx.fragment.app.Fragment;
 
 import com.aurora.corona.Constants;
 import com.aurora.corona.R;
-import com.aurora.corona.model.casetime.Cases_time_series;
-import com.aurora.corona.model.casetime.Key_values;
 import com.aurora.corona.model.casetime.Statewise;
 import com.aurora.corona.util.PrefUtil;
 import com.aurora.corona.util.Util;
@@ -115,13 +113,13 @@ public class DashboardFragment extends Fragment implements SharedPreferences.OnS
 
     private void updateDailyStatus() {
         final String rawTimeSeries = PrefUtil.getString(requireContext(), Constants.PREFERENCE_KEY_VALUES);
-        final Cases_time_series key_values = gson.fromJson(rawTimeSeries, Cases_time_series.class);
+        final Statewise key_values = gson.fromJson(rawTimeSeries, Statewise.class);
 
         if (key_values != null) {
-            txtRecovered.setText(key_values.getDailyrecovered());
-            txtNewCases.setText(key_values.getDailyconfirmed());
-            txtDeaths.setText(key_values.getDailydeceased());
-            txtTodayLastUpdated.setText(StringUtils.joinWith(" : ", "Last updated", key_values.getDate()));
+            txtRecovered.setText(key_values.getDeltarecovered());
+            txtNewCases.setText(key_values.getDeltaconfirmed());
+            txtDeaths.setText(key_values.getDeltadeaths());
+            txtTodayLastUpdated.setText(StringUtils.joinWith(" : ", "Last updated", key_values.getLastupdatedtime()));
         }
     }
 

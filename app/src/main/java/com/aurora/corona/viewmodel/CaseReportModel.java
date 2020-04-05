@@ -76,9 +76,7 @@ public class CaseReportModel extends AndroidViewModel {
             PrefUtil.putString(getApplication(), Constants.PREFERENCE_STATE_WISE, gson.toJson(caseReport.getStatewise()));
             PrefUtil.putString(getApplication(), Constants.PREFERENCE_OVERALL_DATA, gson.toJson(caseReport.getStatewise().get(0)));
             PrefUtil.putString(getApplication(), Constants.PREFERENCE_TESTED, gson.toJson(caseReport.getTested()));
-            List<Cases_time_series> casesTimeSeries = caseReport.getCases_time_series();
-            Collections.reverse(casesTimeSeries);
-            PrefUtil.putString(getApplication(), Constants.PREFERENCE_KEY_VALUES, gson.toJson(casesTimeSeries.get(0)));
+            PrefUtil.putString(getApplication(), Constants.PREFERENCE_KEY_VALUES, gson.toJson(caseReport.getStatewise().get(0)));
             data.setValue(true);
         } catch (Exception e) {
             data.setValue(false);
